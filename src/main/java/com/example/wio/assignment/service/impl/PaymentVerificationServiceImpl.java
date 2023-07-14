@@ -1,11 +1,12 @@
 package com.example.wio.assignment.service.impl;
 
-import com.example.wio.assignment.doa.PaymentDao;
+import com.example.wio.assignment.dao.PaymentDao;
 import com.example.wio.assignment.dto.PaymentInfoDto;
 import com.example.wio.assignment.entity.PaymentInfo;
 import com.example.wio.assignment.service.PaymentVerificationService;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class PaymentVerificationServiceImpl implements PaymentVerificationService {
 
     @Autowired
@@ -42,9 +44,8 @@ public class PaymentVerificationServiceImpl implements PaymentVerificationServic
 
                 line = reader.readNext();
             }
-
-
         } catch (CsvValidationException | IOException e) {
+            log.error("Cannot process CSV file");
             throw new RuntimeException(e);
         }
 
@@ -53,12 +54,16 @@ public class PaymentVerificationServiceImpl implements PaymentVerificationServic
 
     @Override
     public PaymentInfoDto getPaymentVerificationData(String paymentId) {
-        Optional<PaymentInfo> optionalPaymentInfo = paymentDao.getPaymentVerificationById(paymentId);
 
-        PaymentInfo    paymentInfo    = optionalPaymentInfo.get();
+        Optional<PaymentInfo> optionalPaymentInfo = paymentDao.getPaymentVerificationById(paymentId);
         PaymentInfoDto paymentInfoDto = new PaymentInfoDto();
 
-        populatePaymentInfoDto(paymentInfo, paymentInfoDto);
+        if(optionalPaymentInfo.isPresent()) {
+            PaymentInfo paymentInfo = optionalPaymentInfo.get();
+            populatePaymentInfoDto(paymentInfo, paymentInfoDto);
+        } else {
+            log.error("getPaymentVerificationData - Failed");
+        }
 
         return paymentInfoDto;
     }

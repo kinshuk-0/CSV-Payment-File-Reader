@@ -1,4 +1,4 @@
-package com.example.wio.assignment.doa;
+package com.example.wio.assignment.dao;
 
 import com.example.wio.assignment.entity.PaymentInfo;
 
