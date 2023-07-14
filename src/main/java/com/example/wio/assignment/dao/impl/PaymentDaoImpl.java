@@ -1,7 +1,6 @@
 package com.example.wio.assignment.dao.impl;
 
 import com.example.wio.assignment.dao.PaymentDao;
-import com.example.wio.assignment.dto.PaymentInfoDto;
 import com.example.wio.assignment.entity.PaymentInfo;
 import com.example.wio.assignment.repository.PaymentRepository;
 import lombok.extern.slf4j.Slf4j;
