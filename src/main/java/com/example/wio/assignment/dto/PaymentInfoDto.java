@@ -14,7 +14,7 @@ public class PaymentInfoDto {
 
     private String paymentType;
 
-    private Instant createdAt;
+    private Long createdAt;
 
     private Boolean verified;
 }

@@ -30,10 +30,10 @@ public class PaymentInfo {
     private String paymentType;
 
     @Column
-    private Instant createdAt;
+    private Long createdAt;
 
     @Column
-    private Instant modifiedAt;
+    private Long modifiedAt;
 
     @Column
     private Boolean verified;

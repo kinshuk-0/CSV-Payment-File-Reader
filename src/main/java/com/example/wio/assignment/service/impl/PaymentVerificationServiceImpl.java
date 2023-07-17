@@ -38,7 +38,7 @@ public class PaymentVerificationServiceImpl implements PaymentVerificationServic
                 paymentInfo.setPaymentType(line[2]);
 
                 Instant now = Instant.now();
-                paymentInfo.setCreatedAt(now);
+                paymentInfo.setCreatedAt(now.toEpochMilli());
 
                 paymentDao.updatePaymentInfo(paymentInfo);
 

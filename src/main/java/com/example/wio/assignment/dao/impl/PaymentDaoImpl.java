@@ -23,20 +23,20 @@ public class PaymentDaoImpl implements PaymentDao {
     @Override
     public void updatePaymentInfo(PaymentInfo paymentInfo) {
 
-        try {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    Instant modifiedTime = Instant.now();
-                    paymentInfo.setModifiedAt(modifiedTime);
-                    paymentInfo.setVerified(randomBooleanGenerator());
-                    paymentRepository.save(paymentInfo);
-                }
-            }, minutes * 60 * 1000);
-        } catch (Exception e) {
-            log.error("updatePaymentInfo scheduler - Failed", e);
-        }
+//        try {
+//            Timer timer = new Timer();
+//            timer.schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    Instant modifiedTime = Instant.now();
+//                    paymentInfo.setModifiedAt(modifiedTime.toEpochMilli());
+//                    paymentInfo.setVerified(randomBooleanGenerator());
+//                    paymentRepository.save(paymentInfo);
+//                }
+//            }, 10000);
+//        } catch (Exception e) {
+//            log.error("updatePaymentInfo scheduler - Failed", e);
+//        }
 
         paymentRepository.save(paymentInfo);
     }
@@ -44,6 +44,19 @@ public class PaymentDaoImpl implements PaymentDao {
     @Override
     public Optional<PaymentInfo> getPaymentVerificationById(String paymentId) {
         return paymentRepository.findById(Long.valueOf(paymentId));
+    }
+
+    @Override
+    public void updatePaymentVerificationStatus() {
+        Long currTime = Instant.now().toEpochMilli();
+        List<PaymentInfo> unverifiedPayments = paymentRepository.findAllUnverified(currTime);
+        log.info(unverifiedPayments.toString());
+
+        for(PaymentInfo paymentInfo: unverifiedPayments) {
+            paymentInfo.setVerified(randomBooleanGenerator());
+            paymentInfo.setModifiedAt(Instant.now().toEpochMilli());
+        }
+        paymentRepository.saveAll(unverifiedPayments);
     }
 
     private boolean randomBooleanGenerator() {
