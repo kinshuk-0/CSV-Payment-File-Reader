@@ -1,5 +1,5 @@
 
-# CSV File Processing and Database Storage ~ Wio Assignment
+# CSV File Processing and Database Storage
 
 
 
